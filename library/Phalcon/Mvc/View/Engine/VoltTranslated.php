@@ -59,12 +59,19 @@ class VoltTranslated extends Volt {
 		$di = $this->getDI();
 		$compiler = $this->getCompiler();
 		$options = $this->getOptions();
+		$this->translateService = $di->get($options['translateService']);
+		$translateService = $this->translateService;
 
 		// function "_()"
-		$compiler->addFunction($this->_options['translateFunctionName'], function($arguments) use($di, $options){
-			$translateService = $di->get($options['translateService']);
-			$text = eval('return $translateService->_(' . $arguments . ');');
-			return "'" . addcslashes($text, "'") . "'";
+		$compiler->addFunction($this->_options['translateFunctionName'], function($arguments) use($di, $options, $translateService){
+			$params = eval('return array(' . $arguments . ');');
+			if (count($params) == 1) {
+				$text = "'" . addcslashes($translateService->_($params[0]), "'") . "'";
+			} else {
+				$text = '$this->translateService->_('.$arguments.')';
+			}
+			
+			return $text;
 		});
 
 		// function "lang()"

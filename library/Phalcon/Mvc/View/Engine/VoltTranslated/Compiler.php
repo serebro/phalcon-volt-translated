@@ -17,8 +17,9 @@ class Compiler extends VoltCompiler {
 			isset($statement['expr']['name']['value']) &&
 			$statement['expr']['name']['value'] == $this->_options['translateFunctionName']
 		) {
-			preg_match('<\?php echo \'(.*)\'; \?>', $result, $matches);
-			$result = $matches[1];
+			if (preg_match('<\?php echo \'(.*)\'; \?>', $result, $matches)) {
+				$result = $matches[1];
+			}
 		}
 
 		return $result;
