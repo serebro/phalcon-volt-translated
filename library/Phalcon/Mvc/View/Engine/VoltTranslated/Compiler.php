@@ -15,11 +15,10 @@ class Compiler extends VoltCompiler {
 
 		if (
 			isset($statement['expr']['name']['value']) &&
-			$statement['expr']['name']['value'] == $this->_options['translateFunctionName']
+			$statement['expr']['name']['value'] == $this->_options['translateFunctionName'] &&
+			preg_match('<\?php echo \'(.*)\'; \?>', $result, $matches)
 		) {
-			if (preg_match('<\?php echo \'(.*)\'; \?>', $result, $matches)) {
-				$result = $matches[1];
-			}
+			$result = $matches[1];
 		}
 
 		return $result;

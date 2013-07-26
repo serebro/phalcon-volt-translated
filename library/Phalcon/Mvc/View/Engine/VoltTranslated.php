@@ -62,20 +62,34 @@ class VoltTranslated extends Volt {
 		$this->translateService = $di->get($options['translateService']);
 		$translateService = $this->translateService;
 
-		// function "_()"
-		$compiler->addFunction($this->_options['translateFunctionName'], function($arguments) use($di, $options, $translateService){
-			$params = eval('return array(' . $arguments . ');');
-			if (count($params) == 1) {
-				$text = "'" . addcslashes($translateService->_($params[0]), "'") . "'";
-			} else {
-				$text = '$this->translateService->_('.$arguments.')';
+		$_ = function($arguments, $expression) use ($di, $options, $translateService, $compiler) {
+			extract($this->getView()->getParams());
+
+			$first_argument = $compiler->expression($expression[0]['expr']);
+			if (isset($expression[1])) {
+				$second_argument = $compiler->expression($expression[1]['expr']);
 			}
-			
+
+			if (isset($second_argument) || $first_argument[0] == '$') {
+				$text = '$this->translateService->_(' . $arguments . ')';
+			} else {
+				$first_argument = trim($first_argument, '"');
+				$first_argument = trim($first_argument, '\'');
+				$text = "'" . addcslashes($translateService->_($first_argument), "'") . "'";
+			}
+
 			return $text;
-		});
+		};
+
+		// function "_()"
+		$compiler->addFunction($this->_options['translateFunctionName'], $_);
+
+		// filter "_"
+		$compiler->addFilter($this->_options['translateFunctionName'], $_);
 
 		// function "lang()"
 		$this->_compiler->addFunction('lang', function() use($di, $options){
+			extract($this->getView()->getParams());
 			$text = $di->get('dispatcher')->getParam($options['paramLang']);
 			return "'" . addcslashes($text, "'") . "'";
 		});
