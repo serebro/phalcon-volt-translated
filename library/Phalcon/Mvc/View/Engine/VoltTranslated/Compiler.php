@@ -11,16 +11,16 @@ class Compiler extends VoltCompiler {
 	 * @return string
 	 */
 	public function compileEcho($statement) {
-		$result = parent::compileEcho($statement);
-
-		if (
-			isset($statement['expr']['name']['value']) &&
-			$statement['expr']['name']['value'] == $this->_options['translateFunctionName'] &&
-			preg_match('<\?php echo \'(.*)\'; \?>', $result, $matches)
-		) {
-			$result = $matches[1];
+		$c1 = isset($statement['expr']['name']['value']) && $statement['expr']['name']['value'] == $this->_options['translateFunctionName'];
+		$c2 = isset($statement['expr']['left']['name']['value']) && $statement['expr']['left']['name']['value'] == $this->_options['translateFunctionName'];
+		if ($c1 || $c2) {
+			$exp = $this->expression($statement['expr']);
+			$result = trim(trim($exp, '"'), '\'');
+			if ($result !== $exp) {
+				return $result;
+			}
 		}
 
-		return $result;
+		return parent::compileEcho($statement);
 	}
 }
