@@ -51,18 +51,18 @@ $di->set(VOLT_SERVICE_NAME, function($view, $di) {
 // Step #2 Registrating translation storage service
 $di->set(TRANSLATE_SERVICE_NAME, function() use($di) {
   // Now we're getting the best language for the user
-	$current_lang = $di->get('dispatcher')->getParam(LANGUAGE_PARAMETER_NAME); // or $di->get('request')->getBestLanguage();
+  $current_lang = $di->get('dispatcher')->getParam(LANGUAGE_PARAMETER_NAME); // or $di->get('request')->getBestLanguage();
 
   // MongoDB
-	$mongo = new Mongo('mongodb://localhost:27017');
-	$db = $mongo->selectDb('testdb');
-	return new \Phalcon\Translate\Adapter\Mongo([
-	  'db'         => $db,
-	  'collection' => 'translate',
-	  'lang'       => $current_lang,
-	]);
+  $mongo = new Mongo('mongodb://localhost:27017');
+  $db = $mongo->selectDb('testdb');
+  return new \Phalcon\Translate\Adapter\Mongo([
+      'db'         => $db,
+      'collection' => 'translate',
+      'lang'       => $current_lang,
+  ]);
 	
-	// MySQL
+  // MySQL
   // return new \Phalcon\Translate\Adapter\Database([
   //  'db'       => $this->di->get('db'), // Here we're getting the database from DI
   //  'table'    => 'translations', // The table that is storing the translations
