@@ -1,26 +1,36 @@
 Phalcon Volt Translated
 =======================
+This labrary converts volt templates in php files with translated phrases and stores them in a folder for each language. 
+This method reduces the load on the system in productions.
+
 
 ### Example
 
 **test.volt**
 ~~~html
-<div>Current language - {{ lang() }}</div>
-<label>{{ _('name') }}:</label><input type="text" />
+<label>{{ _('first_name') }}:</label>
+<label>{{ _('last_name') }}:</label>
+<div>{{ _('current_language') }} - {{ lang() }}</div>
 ~~~
 
 **This volt template will translate to the view**
 
-(For English)
+For english
+
+*/cache/volt/en/test.volt.php*
 ```html
+<label>First name:</label>
+<label>Last name:</label>
 <div>Current language - <?= $this->lang() ?></div>
-<label>Name:</label><input type="text" />
 ```
 
-(For Russian)
+For russian
+
+*/cache/volt/ru/test.volt.php*
 ```html
-<div>Current language - <?= $this->lang() ?></div>
-<label>Имя:</label><input type="text" />
+<label>Имя:</label>
+<label>Фамилия:</label>
+<div>Текущий язык - <?= $this->lang() ?></div>
 ```
 
 ### Configuration
