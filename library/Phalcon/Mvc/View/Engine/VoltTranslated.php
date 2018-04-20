@@ -63,7 +63,7 @@ class VoltTranslated extends Volt {
 		$translateService = $this->translateService;
 
 		$_ = function($arguments, $expression) use ($di, $options, $translateService, $compiler) {
-			extract($this->getView()->getParams());
+			extract($this->getView()->getParamsToView());
 
 			$first_argument = $compiler->expression($expression[0]['expr']);
 			if (isset($expression[1])) {
@@ -89,7 +89,7 @@ class VoltTranslated extends Volt {
 
 		// function "lang()"
 		$this->_compiler->addFunction('lang', function() use($di, $options){
-			extract($this->getView()->getParams());
+			extract($this->getView()->getParamsToView());
 			$text = $di->get('dispatcher')->getParam($options['paramLang']);
 			return "'" . addcslashes($text, "'") . "'";
 		});
